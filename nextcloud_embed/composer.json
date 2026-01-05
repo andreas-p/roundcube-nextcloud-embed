@@ -1,0 +1,21 @@
+{
+	"name" : "roundcube/nextcloud_embed",
+	"type" : "roundcube-plugin",
+	"description" : "Roundcube plugin for embedded operation in Nextcloud",
+	"license" : "GPL-3.0-or-later",
+	"version" : "1.0",
+	"authors" : [{
+			"name" : "Andreas Pflug",
+			"email" : "andreas-p@github.com"
+		}
+	],
+	"require" : {
+		"php" : ">=7.3.0",
+		"roundcube/plugin-installer" : "~0.3.5"
+	},
+	"autoload" : {
+		"classmap" : [
+			"imapsync.php"
+		]
+	}
+}
