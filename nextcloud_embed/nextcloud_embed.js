@@ -8,6 +8,11 @@ function embedded_in_nextcloud()
 
 function nextcloud_embed_init(_event)
 {
+	document.getElementById("rcmloginsubmit").addEventListener("click", function() {
+		// Accept login form submit with empty values
+		window.location.href=window.location.pathname;	
+	});	
+
 	if (embedded_in_nextcloud())
 	{
 		const topBodyStyle=window.top.getComputedStyle(window.top.document.body)
