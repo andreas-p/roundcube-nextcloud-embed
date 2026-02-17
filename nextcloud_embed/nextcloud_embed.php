@@ -39,18 +39,40 @@ class nextcloud_embed extends rcube_plugin
             $this->add_hook('session_destroy', [$this, 'session_destroy']);
             $this->add_hook('logout_after', [$this, 'logout_after']);
         }
+        else
+        {
+            $this->add_hook('storage_connect', [$this, 'storage_connect']);
+            $this->add_hook('storage_connected', [$this, 'storage_connected']);
+        }
     }
   
+    public function storage_connect($args)
+    {
+        if (isset($_SESSION['connectionChecked']) && !$_SESSION['connectionChecked'])
+        {
+            rcube::get_instance()->output->show_message('sessionerror', 'error');
+            session_destroy();
+            exit();
+        }
+        $_SESSION['connectionChecked']=false;
+        return $args;
+    }
+
+    public function storage_connected($args)
+    {
+        $_SESSION['connectionChecked']=true;
+    }
+
+
     public function startup($args)
     {
         // Skip login form
         if (!$args['action']) $args['action'] = "login";
         return $args;
     }
-    
+
     public function authenticate($args)
     {
-        // Get 
         $config=rcube::get_instance()->config;
 
         $host= $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'] . $config->get('navigator_base', '');
@@ -71,10 +93,13 @@ class nextcloud_embed extends rcube_plugin
         if ($rc === true)
         {
             $data=json_decode($result, true);
-            $args['user'] = $data['username'];
-            $args['pass'] = $data['password'];
-            if (isset($data['id']))
-                $_SESSION[self::SESSION_ID]=$data['id'];
+            if (isset($data['password']))
+            {
+                $args['user'] = $data['username'];
+                $args['pass'] = $data['password'];
+                if (isset($data['id']))
+                    $_SESSION[self::SESSION_ID]=$data['id'];
+            }
         }
         return $args;
     }
