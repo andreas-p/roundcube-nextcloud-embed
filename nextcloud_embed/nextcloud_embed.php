@@ -53,16 +53,17 @@ class nextcloud_embed extends rcube_plugin
         // Get 
         $config=rcube::get_instance()->config;
 
-        $host= $_SERVER['HTTP_HOST'] . $config->get('navigator_base', '');
+        $host= $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'] . $config->get('navigator_base', '');
         $client="Roundcube";
         
         $cookies=[];
         foreach ($_COOKIE as $key => $value)
             $cookies[] = "$key=$value";
         
-        $ch=curl_init("http://$host/apps/pse/getMailAccess?clientName=$client");
+        $ch=curl_init("$host/apps/pse/getMailAccess?clientName=$client");
 
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_COOKIE, join('; ', $cookies));
         ob_start();
         $rc=curl_exec($ch);

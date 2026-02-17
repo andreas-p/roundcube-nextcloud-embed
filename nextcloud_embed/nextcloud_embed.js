@@ -8,11 +8,17 @@ function embedded_in_nextcloud()
 
 function nextcloud_embed_init(_event)
 {
-	document.getElementById("rcmloginsubmit").addEventListener("click", function() {
-		// Accept login form submit with empty values
-		window.location.href=window.location.pathname;	
-	});	
-
+	const loginButton=document.getElementById("rcmloginsubmit");
+	if (loginButton)
+	{
+		loginButton.addEventListener("click", function() {
+			// Accept login form submit with empty values
+			window.location.href=window.location.pathname;	
+		});
+	}
+	
+	document.querySelector("link[rel~='icon']").href="/mail/skins/elastic/images/favicon.svg";
+	
 	if (embedded_in_nextcloud())
 	{
 		const topBodyStyle=window.top.getComputedStyle(window.top.document.body)
@@ -22,7 +28,8 @@ function nextcloud_embed_init(_event)
 		const ss=document.styleSheets[0];
 
 		ss.insertRule(`#layout-menu { color: ${textColor} !important; background-color: ${bgColor} !important; }`);
-		ss.insertRule(`#layout-menu div.popover-header { background-color: transparent !important;}`);
+		ss.insertRule(`#layout-menu div.popover-header { display: none; }`);
+//		ss.insertRule(`#layout-menu div.popover-header { background-color: transparent !important;}`);
 		ss.insertRule(`#taskmenu a.selected,#taskmenu a:hover { background-color: ${fgColor} !important; }`);
 		ss.insertRule(`#taskmenu .action-buttons a,#taskmenu .action-buttons a span.inner { color: ${textColor} !important; } `);
 
